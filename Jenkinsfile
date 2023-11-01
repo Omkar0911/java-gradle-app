@@ -1,19 +1,16 @@
 pipeline{
       agent any
       stages{
-          stage("Git Test"){
-              steps{
-                  echo "Executing git connection test"
-              }
-              post{
-                  success{
-                      echo "git repository cloned successfully"
-                  }
-                  failure{
-                      echo "git clone action failed"
-                  }
-              }
-          }
+         stage("Sonar Quality Check") {
+            steps{
+                script{
+                    withSonarQubeEnv(credentialsId: 'sonar-token') {
+                        sh 'chmod +x gradlew'
+                        sh './gradlew sonarqube --info'
+                    }
+                }
+            }
+         }
       }
       post{
           success{
