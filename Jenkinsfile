@@ -2,7 +2,7 @@ pipeline{
       agent any
       environment{
         VERSION = "${env.BUILD_ID}"
-        DOCKER_HOSTED_EP = "54.157.132.194:8083"
+        DOCKER_HOSTED_EP = "54.160.90.174:8083"
       }
       stages{
          stage("Sonar Quality Check") {
