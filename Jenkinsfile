@@ -15,7 +15,7 @@ pipeline{
                     timeout(time: 15, unit: 'MINUTES') {
                         def pg = waitForQualityGate()
                         if (pg.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                            error "Pipeline aborted due to quality gate failure: ${pg.status}"
                         }
                     }
                 }
@@ -35,14 +35,10 @@ pipeline{
                 }
             }
         }
-        stage("Identifying Misconfiguration in HELM charts using datree") {
-            steps {
-                script {
-                    dir('kubernetes/myapp') {
-                        sh 'sudo helm datree test .'
-                    }
-                }
-            }
+    }
+    post {
+        always {
+            mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>Build URL: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "omkar.pro.09@gmail.com";
         }
     }
 }
